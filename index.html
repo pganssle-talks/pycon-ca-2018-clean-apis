@@ -11881,6 +11881,7 @@ a.anchor-link {
 <li>Documentation</li>
 <li>Tab completion</li>
 <li><code>dir(my_module)</code></li>
+<li>Static typing</li>
 </ul>
 
 </div>
@@ -11917,7 +11918,8 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="relativedelta-signature:">relativedelta signature:<a class="anchor-link" href="#relativedelta-signature:">&#182;</a></h3><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">relativedelta</span><span class="p">(</span><span class="n">dt1</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dt2</span><span class="p">:</span><span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<p><u><b><tt>relativedelta</tt> signature:</b></u></p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">relativedelta</span><span class="p">(</span><span class="n">dt1</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dt2</span><span class="p">:</span><span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">years</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">months</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>
                   <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">relativedelta</span><span class="p">:</span>
     <span class="o">...</span>
@@ -11930,7 +11932,8 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Intended-use:">Intended use:<a class="anchor-link" href="#Intended-use:">&#182;</a></h3><div class="highlight"><pre><span></span><span class="n">relativedelta</span><span class="p">(</span><span class="n">dt1</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dt2</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">relativedelta</span>
+<p><u><b>Intended use:</b></u></p>
+<div class="highlight"><pre><span></span><span class="n">relativedelta</span><span class="p">(</span><span class="n">dt1</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dt2</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">relativedelta</span>
 </pre></div>
 <p><strong>or</strong></p>
 <div class="highlight"><pre><span></span><span class="n">relativedelta</span><span class="p">(</span><span class="n">years</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">months</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>
@@ -11945,7 +11948,7 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Return-type-determined-by-function-logic">Return type determined by function logic<a class="anchor-link" href="#Return-type-determined-by-function-logic">&#182;</a></h3><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">send_request</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">RequestType</span><span class="p">,</span>
-                 <span class="n">return_context</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ResponseType</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ResponseType</span><span class="p">,</span> <span class="n">Context</span><span class="p">]]:</span>
+                 <span class="n">return_context</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ResponseType</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ResponseType</span><span class="p">,</span> <span class="n">Context</span><span class="p">]]:</span>
     <span class="o">...</span>
 </pre></div>
 
@@ -12905,7 +12908,7 @@ Santiago: 33.448900S,70.669300W
 
 </div>
 </div>
-</div></div><div class="fragment">
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -14050,7 +14053,7 @@ Hello, world! This is from a file!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="PyData-NYC-2018---October-17-19">PyData NYC 2018 - October 17-19<a class="anchor-link" href="#PyData-NYC-2018---October-17-19">&#182;</a></h3><h3 id="&quot;Contributing-to-Open-Source:-A-Guide&quot;---Thursday-10:50AM">"Contributing to Open Source: A Guide" - Thursday 10:50AM<a class="anchor-link" href="#&quot;Contributing-to-Open-Source:-A-Guide&quot;---Thursday-10:50AM">&#182;</a></h3>
+<h3 id="PyData-NYC-2018---October-17-19">PyData NYC 2018 - October 17-19<a class="anchor-link" href="#PyData-NYC-2018---October-17-19">&#182;</a></h3><h3 id="&#8220;Contributing-to-Open-Source:-A-Guide&#8221;---Thursday-10:50AM">&#8220;Contributing to Open Source: A Guide&#8221; - Thursday 10:50AM<a class="anchor-link" href="#&#8220;Contributing-to-Open-Source:-A-Guide&#8221;---Thursday-10:50AM">&#182;</a></h3>
 </div>
 </div>
 </div>
