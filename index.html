@@ -11852,7 +11852,21 @@ a.anchor-link {
 <br/>
 <img src="img-sources/cc-by.svg"/>
 <div style='text-align:center'>Copyright 2018 Bloomberg Finance L.P.</div>
-</div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hi everyone. Everyone still awake? Still have enough energy to hear me pontificate about API design? Because I'm going to warn you, this is probably the most high energy part of the talk.</p>
+<p>So, my name is Paul Ganssle. I'm a software developer at Bloomberg in one of our New York offices and also a frequent contributor to open source software and maintainer of several libraries. Lately I've been maintaining setuptools, and for a long time now I've been maintaining dateutil.</p>
+<p>So, as a library maintainer, I spend a lot of time thinking about interfaces, how programmers are going to interface with my library and what they see when they look at the documentation.</p>
+<p>So of course if I were to give all my thoughts on this, this talk would be three hours long instead of 30 minutes. But I'm just going to drill down into one thing, which is namespacing and how do you deal with functionality that is functionality that is fundamentally similar to other functionality that you have in there but has a slightly different interface.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11872,7 +11886,20 @@ a.anchor-link {
 
 </div>
 </div>
-</div><div class="fragment">
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We're going to start with a couple of general principles that are re-occuring themes in the talk.</p>
+<p>The first one is that related functionality should be grouped together. So you can namespace your functions by module - the <code>sqrt</code> function is not just a regular built-in; it could be, you wouldn't misinterpret it, but it's namespaced under the <code>math</code> module instead. Compare that to the <code>get</code> function in <code>requests</code>, <code>get</code> is far too broad of a name for a function, but if you look at it in the context of the namespace <code>requests</code>, it's pretty obvious what it does.</p>
+<p>You can also namespace your functions by class, so one example of this is methods on instances; if you look a a <code>str</code> object, it has a method called <code>strip</code> that is operating on the data in the string. There are also methods on classes, like <code>datetime.timestamp</code>, which creates a <code>datetime</code> from a <code>timestamp</code>.</p>
+
+</div>
+</div>
+</div>
+</aside><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11886,7 +11913,21 @@ a.anchor-link {
 
 </div>
 </div>
-</div></div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Related to this is that interfaces should be discoverable. One way that you can discover interfaces is by drilling down into these namespaces through modules and classes. Ideally, everyone would go to the documentation and read it throughly before they write their first line of code. I'm sure you all know how often that happens.</p>
+<p>Much more likely is that they start writing code in PyCharm and then they type a couple of things and they press tab and see what functions are available and maybe, <em>maybe</em> they hit the question mark thing that pulls up the docstring.</p>
+<p>Or maybe they pull up a REPL and they type <code>dir</code> on your module and see what functions are available.</p>
+<p>And increasingly you're going to see people who have static typing and mypy enabled and people will say, "OK, these things will work as long as the things I'm passing them have the right types"</p>
+
+</div>
+</div>
+</div>
+</aside></div></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11902,18 +11943,7 @@ a.anchor-link {
 <h2 id="Think-about-function-signatures">Think about function signatures<a class="anchor-link" href="#Think-about-function-signatures">&#182;</a></h2>
 </div>
 </div>
-</div><aside class="notes">
-
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>If it isn't obvious from the function signature what your interface does, it's not a great interface</p>
-
-</div>
-</div>
-</div>
-</aside>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11927,7 +11957,18 @@ a.anchor-link {
 
 </div>
 </div>
-</div><div class="fragment">
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This leads us to the next principle, which is that you should think about function signatures. So here's a real-life example from <code>dateutil</code> - I don't want to pick on someone else's library. This is <code>relativedelta</code>, the constructor, and you can see it has these two parameters, <code>dt1</code> and <code>dt2</code> and it also has these parameters <code>years</code> and <code>months</code> and <code>year</code> and <code>month</code>. So, what's going on there, how would you use that? When do you use each of these parameters. It's not immediately obvious.</p>
+
+</div>
+</div>
+</div>
+</aside><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11942,7 +11983,19 @@ a.anchor-link {
 
 </div>
 </div>
-</div></div><div class="fragment">
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The intended use is that these first two are one kind of constructor where you construct a relativedelta based on the difference between two datetimes, so you're supposed to pass both of these, and that's the only time you're supposed to use these two parameters. And the other way you're supposed to use these two parameters.</p>
+<p>And the other way that you're supposed to use it is to pass the difference values directly, where years is the number of years in the offset, and year is an absolute year to start from. It's not really on topic for this talk, but you can imagine it's an absolute mess to have one parameter called years and one called year. This leads to unending amounts of confusion.</p>
+
+</div>
+</div>
+</div>
+</aside></div><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11954,7 +12007,19 @@ a.anchor-link {
 
 </div>
 </div>
-</div></div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also have a sort of weird function signature if you have a function where the return type depends on some logic in the function itself. So here we have some fake function called <code>send_request</code> that takes <code>req</code> which is a <code>RequestType</code> and it takes a boolean <code>return_context</code>, and it's either going to return you a response or a tuple containing a response and a context.</p>
+<p>This is not super great, type checkers don't love it. This one is pretty simple but you can have more complicated logic where you aren't entirely sure what the return type is going to be. I personally would prefer that any function should always return either a single type or a class of types that are all substitutable for each other and use the same interface.</p>
+
+</div>
+</div>
+</div>
+</aside></div></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12020,7 +12085,18 @@ a.anchor-link {
 </div>
 </div>
 
-</div><div class="fragment">
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A last general principle is that you should provide explicit versions of magical interfaces. So <code>dateutil</code> is sort of famous for its parser that can just chew up anything. You pass it any string that's even close to a date and it will work just fine. But sometimes you say, "it's actually a bug if you're passing me something that's not an ISO 8601 date string. So in that case, the parser's not going to help you, the parser doesn't tell you what the format was.</p>
+
+</div>
+</div>
+</div>
+</aside><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
@@ -12087,7 +12163,19 @@ a.anchor-link {
 </div>
 </div>
 
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So in <code>dateutil</code> I've added this escape hatch which is <code>isoparse</code>, it's fast but it's also <em>explicit</em>; if you pass it something that is not an ISO 8601 datetime, that <em>will</em> fail.</p>
+<p>So, those are the principles, let's apply them to an example.</p>
+
+</div>
+</div>
+</div>
+</aside></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12132,9 +12220,8 @@ a.anchor-link {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cities</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;Tokyo&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="mf">35.6895</span><span class="p">,</span> <span class="o">-</span><span class="mf">139.6917</span><span class="p">),</span>
-    <span class="s1">&#39;New York&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="mf">40.7128</span><span class="p">,</span> <span class="mf">74.0060</span><span class="p">),</span>
-    <span class="s1">&#39;Brisbane&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="o">-</span><span class="mf">27.4698</span><span class="p">,</span> <span class="o">-</span><span class="mf">153.0251</span><span class="p">),</span>
-    <span class="s1">&#39;Santiago&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="o">-</span><span class="mf">33.4489</span><span class="p">,</span> <span class="mf">70.6693</span><span class="p">)</span>
+    <span class="s1">&#39;Santiago&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="o">-</span><span class="mf">33.4489</span><span class="p">,</span> <span class="mf">70.6693</span><span class="p">),</span>
+    <span class="s1">&#39;Toronto&#39;</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">(</span><span class="mf">43.7001</span><span class="p">,</span> <span class="mf">79.4163</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">city_strs</span> <span class="o">=</span> <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="k">for</span> <span class="n">city</span><span class="p">,</span> <span class="n">coords</span> <span class="ow">in</span> <span class="n">cities</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -12157,9 +12244,8 @@ a.anchor-link {
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Tokyo: 35.689500N,139.691700E
-New York: 40.712800N,74.006000W
-Brisbane: 27.469800S,153.025100E
 Santiago: 33.448900S,70.669300W
+Toronto: 43.700100N,79.416300W
 </pre>
 </div>
 </div>
@@ -12167,7 +12253,19 @@ Santiago: 33.448900S,70.669300W
 </div>
 </div>
 
-</div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So here's an example class, it's a coordinate on the planet earth. It takes latitude and longitude, and it mostly exists because it contains the data and it also has this nice representation as a string with North and South instead of positive and negative.</p>
+<p>So here's an example - I have this mapping of cities to their coordinates and they print out nicely. But what if I want to go the other way? What if I printed this out to some JSON and I want to get coordinates from them. I don't really have any way to go the other way.</p>
+
+</div>
+</div>
+</div>
+</aside></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12272,7 +12370,18 @@ Santiago: 33.448900S,70.669300W
 </div>
 </div>
 
-</div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So naively you might say, let's write a function that looks like this, where we have an init that either will take a string, and if it's a string I parse it, and if I pass it two floats I use the regular constructor.</p>
+
+</div>
+</div>
+</div>
+</aside></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12290,7 +12399,7 @@ Santiago: 33.448900S,70.669300W
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Actual-API:">Actual API:<a class="anchor-link" href="#Actual-API:">&#182;</a></h3><ul>
-<li><code>Coordinate(coord_or_str: Union[float, str], long: float=None) -&gt; Coordinate</code></li>
+<li><code>Coordinate(coord_str_or_lat: Union[float, str], long: float=None) -&gt; Coordinate</code></li>
 </ul>
 
 </div>
@@ -12597,7 +12706,10 @@ Santiago: 33.448900S,70.669300W
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Refactoring this into a <code>classmethod</code> for the alternate constructor gives the same thing for the <code>Point</code> class, but <code>Point</code> is no longer hard-coded into the alternate constructor</p>
+<p>Another benefit that you get from alternate constructors is that it uses the normal inheritance tree. You have this thing, it's a dataclass that represents a point in Cartesian space, but I may also want to represent it in polar coordinates. If you don't know what the difference is, it doesn't really matter, let's just say that they both take two numbers and they both represent the same point but in slightly different ways.</p>
+<p>So I'm going to implement this as <code>from_polar</code> which takes the constructor arguments and passes it to this <code>polar_to_cartesian</code>, and when it changes it over to the new base, it passes the constructor arguments.</p>
+<p>If you notice, <code>from_polar</code> is a <code>classmethod</code> and <code>polar_to_cartesian</code> is to <code>staticmethod</code>. The <code>staticmethod</code> is just that I've namespaced it under <code>Point</code>, and it doesn't take the <code>cls</code> parameter because it's just a function that does this conversion internally and doesn't need a reference to the class it's on.</p>
+<p>So now I can use two floats to create my <code>Point</code> object, or I can pass two floats to <code>from_polar</code> and they'll be interpreted a different way.</p>
 
 </div>
 </div>
@@ -12699,7 +12811,7 @@ Santiago: 33.448900S,70.669300W
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can now re-use the <code>from_polar</code> to get an anonymous <code>NamedPoint</code>, but what if we actually want to give our thing a name? For that we can use the <code>super()</code> builtin to call the base class constructor first.</p>
+<p>If I want to have <code>NamedPoint</code>, if I just naively inherit from that, I get the <code>from_polar</code> for free. The only difference is that name is not propagated because I didn't take that into account originally.</p>
 
 </div>
 </div>
@@ -12718,11 +12830,9 @@ Santiago: 33.448900S,70.669300W
     
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_polar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># Initialize the base class</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># Initialize the base class</span>
         
-        <span class="c1"># Customize the subclass functions</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>         <span class="c1"># Customize the subclass functions</span>
             <span class="n">rv</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">return</span> <span class="n">rv</span>
 </pre></div>
@@ -12764,7 +12874,20 @@ Santiago: 33.448900S,70.669300W
 </div>
 </div>
 
-</div></div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So what you can do is you can override the <code>from_polar</code> method, and you'll notice that I don't have to override the <code>polar_to_cartesian</code> method. Here what I'm doing is you can actually call <code>super()</code> inside class methods, and it will call the equivalent class method on the super class but using the base class as the <code>cls</code> parameter.</p>
+<p>So what's happening here is that we're constructing a <code>NamedPoint</code> with the <code>Point</code> constructor and getting a <code>NamedPoint</code> with no name, and then once I have that, I can assign the name to it and return that. So once I have that, I can assign a name to it and return that.</p>
+<p>And once I've done this, I now have a <code>from_polar</code> named <code>origin</code> without having to repeat myself, it's great.</p>
+
+</div>
+</div>
+</div>
+</aside></div></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12864,7 +12987,18 @@ Santiago: 33.448900S,70.669300W
 </div>
 </div>
 
-</div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You'll notice that even though the <code>staticmethod</code> doesn't take a reference to the class, because the class method that calls it has a reference to the class that it's called from, not the class that it's defined on, you can subclass and override that behavior in the <code>staticmethod</code> itself. So here's a 3 dimensional point where I don't have to override <code>from_polar</code>, I just have to redefine <code>polar_to_cartesian</code> to do the equivalent math for three dimensional points, and the alternate constructor comes for free.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12899,7 +13033,19 @@ Santiago: 33.448900S,70.669300W
 </div>
 </div>
 
-</div><div class="fragment">
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So far I've just been telling you about alternate constructors in clases, but these problems occur just as frequently in functions. You've probably seen APIs that look kinda like this, this is a contrived example. It's <code>print_text</code>, and if you pass it a file object it reads it and prints what's inside. If you pass it a string, what it will do is it will interpret that string as a path, open the filepath, and then call itself with a file object.</p>
+<p>The reason this sort of thing exists is that the generic, best version of this that is really extensible is the version that takes a file-like object and reads it, because then it doesn't have to just be a file, it could be a <code>StringIO</code>, it could be anything, but probably 90% of people who use this sort of thing are just going to say "OK, I have some CSV file on disk, I just want to print it out, why do I have to do this with context manager or something", so you have this instinct to say, "I'm going to make this sort of magical so that it will try and pick the right thing to do." But, it has that complicated function signature, which goes against once of our general principles.</p>
+
+</div>
+</div>
+</div>
+</aside><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -13574,7 +13720,7 @@ Hello, world! This is from a file!
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@variants</span><span class="o">.</span><span class="n">primary</span>
-<span class="k">def</span> <span class="nf">fuzzy_parse</span><span class="p">(</span><span class="n">dtstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fuzzy_parse</span><span class="p">(</span><span class="n">dtstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fuzzy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">dtstr</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -13822,7 +13968,7 @@ Hello, world! This is from a file!
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;async_generator object myfunc at 0x7f420b8f88c8&gt;</pre>
+<pre>&lt;async_generator object myfunc at 0x7f39f6fafae8&gt;</pre>
 </div>
 
 </div>
@@ -13855,7 +14001,7 @@ Hello, world! This is from a file!
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;generator object myfunc at 0x7f42073126d8&gt;</pre>
+<pre>&lt;generator object myfunc at 0x7f39f29916d8&gt;</pre>
 </div>
 
 </div>
@@ -14014,6 +14160,27 @@ Hello, world! This is from a file!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Talk.end()"><code>Talk.end()</code><a class="anchor-link" href="#Talk.end()">&#182;</a></h1>
+</div>
+</div>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So to conclude the talk, I would like to suggest that you don't take what I'm saying as a given. When I gave a lightning talk about the <code>variants</code> library, I started off by asking the audience to tell me why I'm wrong.</p>
+<p>Sure, I want to win the ultimate prize: universal recognition that I am right and my colleague is wrong, but one thing I've learned working at Bloomberg is that my colleagues are <em>very</em> smart. I think I've made a compelling case for the use of these patterns and why the function variant pattern is a natural extension of other types of namespacing, but I think having good interfaces is more important than being right.</p>
+<p>Though if you're watching the video, Matt, I'm definitely right.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Talk.end.with_plugs()"><code>Talk.end.with_plugs()</code><a class="anchor-link" href="#Talk.end.with_plugs()">&#182;</a></h1>
 </div>
 </div>
@@ -14039,7 +14206,21 @@ Hello, world! This is from a file!
 <center><b>@TechAtBloomberg</b> - <a href="https://www.techatbloomberg.com">https://www.TechAtBloomberg.com</a></center>
 </div>
 </div>
-</div><div style="text-align:center"><img src="images/pganssle-logos.svg" style="border: 0px; box-shadow: none; height: 40px; display:inline"></div></section></section>
+</div><div style="text-align:center"><img src="images/pganssle-logos.svg" style="border: 0px; box-shadow: none; height: 40px; display:inline"></div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And before I pause for questions, I'm going to take advantage of the fact that I'm up here with a microphone for some plugs.</p>
+<p>For one thing, if you're interested in <code>variants</code>, you can find it on PyPI and Github. It's open source and I'm happy to look at issues and pull requests.</p>
+<p>I'd also like to thank Bloomberg for paying for me to be out here and in general encouraging our employees to speak at conferences and contribute to open source. If you're interested in working at Bloomberg the major engineering offices in New York, London and San Francisco, and as I mentioned it's a great company with a <em>lot</em> of smart people working there. If you're interested, come see me after the talk, or visit careers.bloomberg.com</p>
+<p>And finally, you can find more information about me, I'm pganssle on github and twitter, and my website is ganssle.io. The slides for this talk and my other talks are available on my website.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section>
 </div>
 <div class="footer">
 
